@@ -1,0 +1,55 @@
+* QA-edit
+
+A web based UI to search for papers, browse parsed pdf documents, edit a SQuAD
+like QA dataset.
+
+** functionalities
+
+FastAPI backend to handle the dataset GET/POST methods:
+- load a sample (by id)
+- save sample (update)
+
+Automatically:
+- load latest json file
+- save json file automatically after update
+
+** UI elements
+
+Luckily for us html and the browser will implement many of features for us (i.e. text wrapping, text
+highlighting, etc.). Which should technically make all this work much easier.
+
+- id (input) + next/prev (buttons)
+- label (combobox)
+- topic (combobox)
+- question (input)
+- answer (input)
+- context_id (combo)
+- context (text area)
+- passage + ref (readonly text area or paragraph)
+
+** Feature list
+
+QA editor:
+- [8/11] basic
+  - [X] context id, label, topic/subtopic input
+  - [X] save question/update dataset
+  - [X] next/previous question
+  - [X] goto question
+  - [X] add question function
+  - [X] serialization
+  - [X] export to json
+  - [X] initialization cli (set savepath, exportpath, load_latest,
+    load_from json or pkl)
+  - [ ] change dataset name (https://www.w3schools.com/jsref/met_win_prompt.asp)
+  - [ ] word count
+  - [ ] dataset statistics
+- [0/3] extra
+  - [ ] implement advanced multiword fuzzy search/highlight with js
+  - [ ] search function for contexts web and local
+  - [ ] foldable article items (maybe not if you want full page search...)
+
+Paper search: (see above)
+- TBD
+
+Document browser:
+- TBD

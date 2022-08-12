@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<html>
+  <body>
+    <head>
+  <title>QA-Edit</title>
+  <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    </head>
+
+<script src="{{ url_for('js', path='mytest.js') }}"></script>
+
+<link href="{{ url_for('static', path='sakura.css') }}" rel="stylesheet">
+
+<h1>QA-Edit</h1>
+<p>A simple question-answering dataset editor</p>
+
+<div name-"question id">
+Dataset name : <a id="qid">{{qid}}</a> <button type="submit", value="Submit">Edit</button>
+</div>
+
+<div name-"question id">
+<p id="qid">Current question : {{qid}}</p>
+</div>
+
+<div>
+  Label :
+  <select name="label" id="label">
+    {% for l in labels %}
+        {% if l == label %}
+            <option selected>{{l}}</option>
+        {% else %}
+            <option>{{l}}</option>
+        {% endif %}
+    {% endfor %}
+  </select>
+  Topic :
+  <select name="topic" id="topic">
+    {% for t in topics %}
+        {% if t == topic %}
+            <option selected>{{t}}</option>
+        {% else %}
+            <option>{{t}}</option>
+        {% endif %}
+    {% endfor %}
+  </select>
+  Context id :
+  <input type="number", id="context_id", value="{{context_id}}", cols="10", style="width:6em",
+         min="0", max="9">
+</div>
+
+<textarea id="question" name="question" rows="2" cols="50"
+          style="resize:vertical">{{question}}</textarea>
+
+<textarea id="answer" name="answer" rows="2" cols="50"
+  style="resize:vertical">{{answer}}</textarea>
+
+<textarea id="context" name="context" rows="4" cols="50"
+          style="resize:vertical">{{context}}</textarea>
+
+<div>
+<button type="submit" value="Submit", onclick="callAdd()">Add new</button>
+</div>
+
+<div>
+<!-- @BUG:: these buttons are oddly organized, look into css sheet to right hand
+  justify the save and export buttons
+-->
+<button type="submit" value="Submit", style="float:right", onclick="callSave()">Save</button>
+<button type="submit" value="Submit", style="float:right", onclick="callExport()">Export</button>
+
+<button type="submit" value="Submit", onclick="prev()">Prev</button>
+<button type="submit" value="Submit", onclick="next()">Next</button>
+<button type="submit" value="Submit", id="goto", onclick="goto()">Goto</button>
+<input type="number", value="{{qid}}", id="qid_select", cols="10", style="width:6em">
+</div>
+
+<hr>
+
+{% for passage in top_passages %}
+<div>
+  <ul>
+    <li style="font-size:18px"> Passage {{loop.index - 1}} : {{ passage.0.title }}</li>
+    <a href="{{ passage.0.doi }}" target="_blank" >
+      <li style="font-size:18px">Meta : {{ passage.0.meta }} </li>
+    </a>
+  </ul>
+
+<p style="font-size:14px">
+  {{passage.1}}
+</p>
+</div>
+{% endfor %}
+
+</body>
+</html>

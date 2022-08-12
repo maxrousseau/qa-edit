@@ -1,0 +1,5 @@
+exports/
+save_data/
+data/
+__pycache__/
+.#*
