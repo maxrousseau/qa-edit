@@ -134,11 +134,12 @@ def new_sample(sample: sampleForm):
     return new_id
 
 
-@app.get("/sample/{qid}", response_class=HTMLResponse)
-async def read_item(request: Request, qid: int):
+@app.get("/sample/{loc}", response_class=HTMLResponse)
+async def read_item(request: Request, loc: int):
     # from dataset
-    item = oqa.item_from_id(qid)
+    item = oqa.item_from_loc(loc)
 
+    qid = item.qid
     question = item.q
     answer = item.a
     context = item.c
@@ -151,6 +152,7 @@ async def read_item(request: Request, qid: int):
 
     d = {
         "request": request,
+        "loc": loc,
         "qid": qid,
         "question": question,
         "answer": answer,

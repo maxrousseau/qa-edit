@@ -30,7 +30,7 @@ highlighting, etc.). Which should technically make all this work much easier.
 ** Feature list
 
 QA editor:
-- [8/11] basic
+- [8/12] basic
   - [X] context id, label, topic/subtopic input
   - [X] save question/update dataset
   - [X] next/previous question
@@ -43,7 +43,11 @@ QA editor:
   - [ ] change dataset name (https://www.w3schools.com/jsref/met_win_prompt.asp)
   - [ ] word count
   - [ ] dataset statistics
-- [0/3] extra
+  - [ ] passage reference from the counter with a link to the document browser
+    page for that paper (and hyperlink to the search result by inputting name
+    into angle website search bar)
+- [0/4] extra
+  - [ ] keybindings
   - [ ] implement advanced multiword fuzzy search/highlight with js
   - [ ] search function for contexts web and local
   - [ ] foldable article items (maybe not if you want full page search...)

@@ -1,5 +1,7 @@
+alpha-set
 exports/
 save_data/
 data/
 __pycache__/
 .#*
+*.pkl

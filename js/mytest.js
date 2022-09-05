@@ -41,28 +41,29 @@ function sendPost() {
 function next() {
     sendPost(); // save current question before leaving
     var url = "http://127.0.0.1:8000/sample/"
-    var qid = parseInt(document.getElementById('qid').textContent.trim());
-    qid += 1;//@BUG check if out of bound...
-    qid = qid.toString();
-    url = url + qid
+    var loc = parseInt(document.getElementById('index').textContent.trim());
+    console.log(loc)
+    loc += 1;//@BUG check if out of bound...
+    loc = loc.toString();
+    url = url + loc
     window.location.href = url
 }
 
 function prev() {
     sendPost(); // save current question before leaving
     var url = "http://127.0.0.1:8000/sample/"
-    var qid = parseInt(document.getElementById('qid').textContent.trim());
-    qid -= 1; //@BUG check if out of bound...
-    qid = qid.toString();
-    url = url + qid
+    var loc = parseInt(document.getElementById('index').textContent.trim());
+    loc -= 1; //@BUG check if out of bound...
+    loc = loc.toString();
+    url = url + loc
     window.location.href = url
 }
 
 function goto() {
     sendPost(); // save current question before leaving
     var url = "http://127.0.0.1:8000/sample/"
-    var qid = document.getElementById('qid_select').value.toString();
-    url = url + qid
+    var loc = document.getElementById('qid_select').value.toString();
+    url = url + loc
     window.location.href = url
 }
 

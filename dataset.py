@@ -32,6 +32,7 @@ class Dataset:
     export_path: str = None
 
     # sample arrays
+    idx: list = field(default_factory=lambda: [])
     labels: list = field(default_factory=lambda: [])
     topics: list = field(default_factory=lambda: [])
     questions: list = field(default_factory=lambda: [])
@@ -73,6 +74,7 @@ class Dataset:
     def populate_from_dict(self, dataset_dict):
         """populate the fields of the datastructure from a dict containing correct fields"""
         for i in dataset_dict:
+            self.idx.append(i["id"])
             self.labels.append(i["label"])
             self.topics.append(i["topic"])
             self.questions.append(i["question"])
@@ -133,31 +135,50 @@ class Dataset:
     def rename(self, n):
         self.name = n
 
+    def item_from_loc(self, loc):
+        item = Item(
+            qid=self.idx[loc],
+            label=self.labels[loc],
+            t=self.topics[loc],
+            q=self.questions[loc],
+            a=self.answers[loc],
+            c=self.contexts[loc],
+            c_id=self.context_ids[loc],
+            passages=self.top_passages[loc],
+            refs=self.top_passages_refs[loc],
+        )
+        return item
+
     def item_from_id(self, sample_id):
+        # @BUG use loc variable to map to the location of the id in the array
+        loc = self.idx.index(sample_id)
         item = Item(
             qid=sample_id,
-            label=self.labels[sample_id],
-            t=self.topics[sample_id],
-            q=self.questions[sample_id],
-            a=self.answers[sample_id],
-            c=self.contexts[sample_id],
-            c_id=self.context_ids[sample_id],
-            passages=self.top_passages[sample_id],
-            refs=self.top_passages_refs[sample_id],
+            label=self.labels[loc],
+            t=self.topics[loc],
+            q=self.questions[loc],
+            a=self.answers[loc],
+            c=self.contexts[loc],
+            c_id=self.context_ids[loc],
+            passages=self.top_passages[loc],
+            refs=self.top_passages_refs[loc],
         )
         return item
 
     def update_from_item(self, item):
         """only update label, question, answer and context"""
-        self.answers[item.qid] = item.a
-        self.questions[item.qid] = item.q
-        self.topics[item.qid] = item.t
-        self.contexts[item.qid] = item.c
-        self.context_ids[item.qid] = item.c_id
-        self.labels[item.qid] = item.label
+        loc = self.idx.index(item.qid)
+        self.answers[loc] = item.a
+        self.questions[loc] = item.q
+        self.topics[loc] = item.t
+        self.contexts[loc] = item.c
+        self.context_ids[loc] = item.c_id
+        self.labels[loc] = item.label
 
     def new_sample(self, last_sample):
         """create a new sample and appends to dataset"""
+        # @BUG could be broken if not used with the full dataset because then
+        # the id could be duplicated
         new_id = len(self.questions)
 
         self.labels.append(self.label_list[0])

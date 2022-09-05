@@ -14,11 +14,13 @@
 <h1>QA-Edit</h1>
 <p>A simple question-answering dataset editor</p>
 
-<div name-"question id">
+<div name-"dataset name">
 Dataset name : <a id="qid">{{qid}}</a> <button type="submit", value="Submit">Edit</button>
 </div>
 
+
 <div name-"question id">
+<p id="index">{{loc}}</p>
 <p id="qid">Current question : {{qid}}</p>
 </div>
 
@@ -54,12 +56,14 @@ Dataset name : <a id="qid">{{qid}}</a> <button type="submit", value="Submit">Edi
 <textarea id="answer" name="answer" rows="2" cols="50"
   style="resize:vertical">{{answer}}</textarea>
 
-<textarea id="context" name="context" rows="4" cols="50"
+<textarea id="context" name="context" rows="23" cols="50"
           style="resize:vertical">{{context}}</textarea>
 
+<!--
 <div>
 <button type="submit" value="Submit", onclick="callAdd()">Add new</button>
 </div>
+-->
 
 <div>
 <!-- @BUG:: these buttons are oddly organized, look into css sheet to right hand
