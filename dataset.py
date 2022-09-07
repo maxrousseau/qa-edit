@@ -214,7 +214,7 @@ class Dataset:
 
         for i in range(self.n_samples):
             sample = {}
-            sample["id"] = i
+            sample["id"] = self.idx[i]
             sample["label"] = self.labels[i]
             sample["topic"] = self.topics[i]
             sample["question"] = self.questions[i]
