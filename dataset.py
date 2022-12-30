@@ -21,6 +21,7 @@ class Item:
     refs: list = field(default_factory=lambda: None)
 
 
+# @TODO make iterable for future use...
 @dataclass
 class Dataset:
     """A dynamic dataset stored in this class"""
@@ -86,7 +87,55 @@ class Dataset:
 
     def update_meta(self):
         """update the statistics from the current dataset"""
-        self.n_samples = len(self.labels)
+
+        self.n_samples = len(self.idx) - 1
+
+        fields = [
+            self.idx,
+            self.labels,
+            self.topics,
+            self.questions,
+            self.answers,
+            self.contexts,
+            self.context_ids,
+            self.top_passages,
+            self.top_passages_refs,
+        ]
+        # make sure that the number of items in each field match the number of
+        # samples
+        try:
+            assert all([len(x) == self.n_samples + 1 for x in fields])
+
+        except:
+            # delete corrupted samples @BUG modify this later on...
+            self.idx = self.idx[: self.n_samples]
+            self.labels = self.labels[: self.n_samples]
+            self.topics = self.topics[: self.n_samples]
+            self.questions = self.questions[: self.n_samples]
+            self.answers = self.answers[: self.n_samples]
+            self.contexts = self.contexts[: self.n_samples]
+            self.context_ids = self.context_ids[: self.n_samples]
+            self.top_passages = self.top_passages[: self.n_samples]
+            self.top_passages_refs = self.top_passages_refs[: self.n_samples]
+
+            fields = [
+                self.idx,
+                self.labels,
+                self.topics,
+                self.questions,
+                self.answers,
+                self.contexts,
+                self.context_ids,
+                self.top_passages,
+                self.top_passages_refs,
+            ]
+
+            print(len(self.idx))
+            print(len(self.labels))
+            print(self.n_samples)
+
+            return [len(x) == self.n_samples for x in fields]
+            assert all([len(x) == self.n_samples for x in fields])
 
         self.n_valid = self.n_discard = self.n_review = self.n_unlabeled = 0
 
@@ -102,21 +151,6 @@ class Dataset:
                 self.n_unlabeled += 1
             else:
                 print("[ERROR] :: label not found at index {}".format(i))
-
-        fields = [
-            self.labels,
-            self.topics,
-            self.questions,
-            self.answers,
-            self.contexts,
-            self.context_ids,
-            self.top_passages,
-            self.top_passages_refs,
-        ]
-
-        # make sure that the number of items in each field match the number of
-        # samples
-        assert all([len(x) == self.n_samples for x in fields])
 
     @staticmethod
     def load_from_pickle(path):
@@ -177,10 +211,13 @@ class Dataset:
 
     def new_sample(self, last_sample):
         """create a new sample and appends to dataset"""
-        # @BUG could be broken if not used with the full dataset because then
-        # the id could be duplicated
+
+        # @BUG This is broken if not used with the full dataset because then the id could be duplicated. The whole
+        # question id system needs to be re-written and use generated UUIDs and check for duplicates before adding a new
+        # sample (fix this before moving to the curation phase of the valid samples)
         new_id = len(self.questions)
 
+        self.idx.append(new_id)
         self.labels.append(self.label_list[0])
         self.topics.append(self.topic_list[0])
         self.answers.append("[NEW] :: " + last_sample.a)
@@ -241,3 +278,16 @@ class Dataset:
             )
         with open(self.export_path, "w", encoding="utf-8") as f:
             json.dump(sample_list, f, ensure_ascii=False, indent=2)
+
+
+@dataclass
+class Sample:
+    qid: int
+    uuid: int
+    question: str
+    answer: str
+    context: str
+    topic: str
+    label: str
+    source_page:
+    reference: list = field(default_factory=lambda: None) #

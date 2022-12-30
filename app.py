@@ -166,3 +166,7 @@ async def read_item(request: Request, loc: int):
     }
 
     return templates.TemplateResponse("ui_template.html", d)
+
+
+# @app.get("/curate/{loc}", response_class=HTMLResponse)
+# async def read_item(request: Request, loc: int):
