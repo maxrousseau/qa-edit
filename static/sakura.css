@@ -153,6 +153,7 @@ textarea {
   border-radius: 1px;
   border: 1px solid #1d7484;
   cursor: pointer;
+  border-radius: 4px;
   box-sizing: border-box; }
   .button[disabled], button[disabled], input[type="submit"][disabled], input[type="reset"][disabled], input[type="button"][disabled] {
     cursor: default;

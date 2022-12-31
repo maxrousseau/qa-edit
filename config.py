@@ -9,6 +9,7 @@ class Config:
     latest_save: str = None
     load_file: str = None
     init_mode: str = "latest"
+    view_mode: str = "curation"  # filtering, browsing, curation
 
     def dump(self):
         with open("./.conf.pkl", "wb") as f:

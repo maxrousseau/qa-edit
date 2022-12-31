@@ -46,6 +46,12 @@ QA editor:
   - [ ] passage reference from the counter with a link to the document browser
     page for that paper (and hyperlink to the search result by inputting name
     into angle website search bar)
+- [3/5] Curation view
+  - [ ] word count
+  - [X] load and export function (JSON only)
+  - [X] paper lookup https://meridian.allenpress.com/angle-orthodontist/search-results?page=1&q=***PAPERTITLEHERE***&SearchSourceType=1
+  - [ ] pdf lookup from local file with ocr (to be implemented later)
+  - [X] add question function
 - [0/4] extra
   - [ ] keybindings
   - [ ] implement advanced multiword fuzzy search/highlight with js

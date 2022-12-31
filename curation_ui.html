@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+
+<html>
+  <body>
+    <head>
+  <title>QA-Edit</title>
+  <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    </head>
+
+<script type="text/javascript" src="{{ url_for('js', path='curation.js') }}"></script>
+
+<link href="{{ url_for('static', path='sakura.css') }}" rel="stylesheet">
+
+<h1>QA-Edit: Curation</h1>
+<p>A simple question-answering dataset editor</p>
+
+<div name="dataset name">
+Dataset name : <a id="dataset-name">{{name}}</a> <button type="submit", value="Submit", onclick="rename()">Edit</button>
+</div>
+
+<div id="index" hidden>{{loc}}</div>
+<div id="qid" hidden>{{qid}}</div>
+<div id="limit" hidden>{{n_samples}}</div>
+
+<div name="question id">
+Question: {{loc}}/{{n_samples}} <br>
+UUID: {{uuid}}
+</div>
+
+<div>
+  Topic :
+  <select name="topic" id="topic">
+    {% for t in topics %}
+        {% if t == topic %}
+            <option selected>{{t}}</option>
+        {% else %}
+            <option>{{t}}</option>
+        {% endif %}
+    {% endfor %}
+  </select>
+</div>
+
+<textarea id="question" name="question" rows="2" cols="50"
+          style="resize:vertical">{{question}}</textarea>
+
+<textarea id="answer" name="answer" rows="2" cols="50"
+  style="resize:vertical">{{answer}}</textarea>
+
+<textarea id="context" name="context" rows="23" cols="50"
+          style="resize:vertical">{{context}}</textarea>
+
+<div>
+<button type="submit" value="Submit", onclick="add()">Add new</button>
+</div>
+
+<div>
+<!-- @BUG:: these buttons are oddly organized, look into css sheet to right hand
+  justify the save and export buttons
+-->
+<button type="submit" value="Submit", style="float:right", onclick="exportDataset()">Export</button>
+
+<button type="submit" value="Submit", onclick="prev()">Prev</button>
+<button type="submit" value="Submit", onclick="next()">Next</button>
+<button type="submit" value="Submit", id="goto", onclick="goto()">Goto</button>
+<input type="number", value="{{loc}}", id="qid_select", cols="10", style="width:6em">
+</div>
+
+<hr>
+
+<div>
+  <ul>
+    <li style="font-size:18px">
+    Title: <a href="https://meridian.allenpress.com/angle-orthodontist/search-results?page=1&q={{reference.title}}&SearchSourceType=1"
+    target="_blank">{{
+    reference.title }}</li> </a>
+
+    <li style="font-size:18px"> Reference:
+<a href="{{ reference.doi }}" target="_blank" >
+  {{ reference.meta }}
+</a>
+</li>
+  </ul>
+
+<p style="font-size:14px">
+  {{source_page}}
+</p>
+</div>
+
+</body>
+</html>

@@ -9,30 +9,40 @@ from fastapi.templating import Jinja2Templates
 
 from pydantic import BaseModel
 
-from dataset import Dataset, Item
+from dataset import Dataset, Item, Dataset2, Sample, topic_list
 from config import Config
 
 
 app = FastAPI()
-
 cfg = Config.load()
 
 
 def init_dataset():
     # initialization logic here
-    if cfg.init_mode == "latest":
-        oqa = Dataset.load_from_pickle(cfg.latest_save)
-        oqa.update_meta()
-    elif cfg.init_mode == "json":
-        oqa = Dataset()
-        oqa.load_from_json(cfg.load_file)
-    elif cfg.init_mode == "pickle":
-        oqa = Dataset.load_from_pickle(cfg.load_file)
-        oqa.update_meta()
-    else:
-        print("error")
 
-    return oqa
+    if cfg.view_mode == "filtering":
+        if cfg.init_mode == "latest":
+            oqa = Dataset.load_from_pickle(cfg.latest_save)
+            oqa.update_meta()
+        elif cfg.init_mode == "json":
+            oqa = Dataset()
+            oqa.load_from_json(cfg.load_file)
+        elif cfg.init_mode == "pickle":
+            oqa = Dataset.load_from_pickle(cfg.load_file)
+            oqa.update_meta()
+        else:
+            print("error")
+            return oqa
+
+    elif cfg.view_mode == "curation":
+        if cfg.init_mode == "json":
+            oqa = Dataset2()
+            oqa.load_from_json(cfg.load_file)
+
+        else:
+            raise Exception("Specify json file for curation.")
+
+        return oqa
 
 
 oqa = init_dataset()
@@ -51,6 +61,19 @@ class sampleForm(BaseModel):
     context_id: Union[int, None] = None
     topic: str
     label: str
+
+
+class locForm(BaseModel):
+    loc: int
+
+
+class sampleForm2(BaseModel):
+    loc: int
+    qid: int
+    question: str
+    answer: str
+    context: str
+    topic: str
 
 
 @app.get("/")
@@ -75,6 +98,24 @@ def update_sample(sample: sampleForm):
     return sample
 
 
+@app.post("/post-curate/")
+def update_curated_sample(sample: sampleForm2):
+    # HERE update from item
+    s = Sample(
+        qid=sample.qid,
+        question=sample.question,
+        answer=sample.answer,
+        context=sample.context,
+        topic=sample.topic,
+        source_page=oqa[sample.loc].source_page,
+        uuid=oqa[sample.loc].uuid,
+        reference=oqa[sample.loc].reference,
+    )
+    oqa[sample.loc] = s
+
+    return s  # remove?
+
+
 @app.post("/export/")
 def export_dataset(sample: sampleForm):
     """create the new sample based on the last question and add to the
@@ -92,6 +133,24 @@ def export_dataset(sample: sampleForm):
     oqa.json_export()
 
     return 0
+
+
+@app.get("/rename/")
+def rename():
+    """ """
+
+
+@app.get("/export-curate/")
+def export_dataset():
+    """default export function"""
+    # @TODO add function to specify export path with file popup
+    oqa.export()
+
+
+@app.get("/rename/{new_name}")
+def export_dataset(new_name: str):
+    """hacky(?) rename"""
+    oqa.rename(new_name)
 
 
 @app.post("/serialize/")
@@ -134,6 +193,15 @@ def new_sample(sample: sampleForm):
     return new_id
 
 
+@app.post("/new-curate/")
+def new_sample_curate(locform: locForm):
+    """create the new sample based on the last question and add to the
+    dataset"""
+    print(len(oqa))
+    oqa.add(locform.loc)
+    print(len(oqa))
+
+
 @app.get("/sample/{loc}", response_class=HTMLResponse)
 async def read_item(request: Request, loc: int):
     # from dataset
@@ -168,5 +236,22 @@ async def read_item(request: Request, loc: int):
     return templates.TemplateResponse("ui_template.html", d)
 
 
-# @app.get("/curate/{loc}", response_class=HTMLResponse)
-# async def read_item(request: Request, loc: int):
+@app.get("/curate/{loc}", response_class=HTMLResponse)
+async def read_item(request: Request, loc: int):
+    d = {
+        "request": request,
+        "loc": loc,
+        "n_samples": len(oqa) - 1,
+        "name": oqa.name,
+        "qid": oqa[loc].qid,
+        "uuid": oqa[loc].uuid,
+        "question": oqa[loc].question,
+        "answer": oqa[loc].answer,
+        "context": oqa[loc].context,
+        "topic": oqa[loc].topic,
+        "source_page": oqa[loc].source_page,
+        "reference": oqa[loc].reference,
+        "topics": topic_list,
+    }
+
+    return templates.TemplateResponse("curation_ui.html", d)

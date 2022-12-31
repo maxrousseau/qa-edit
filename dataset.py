@@ -4,8 +4,22 @@ import pickle
 from datetime import datetime
 
 from dataclasses import dataclass, field
+import uuid
 
 # @TODO :: add some logging functionalities (verbose and debug)
+
+
+topic_list = [
+    "none",
+    "biomechanics",
+    "biology",
+    "anatomy",
+    "pathology",
+    "materials",
+    "growth",
+    "clinical",
+    "tmj",
+]
 
 
 @dataclass
@@ -283,11 +297,133 @@ class Dataset:
 @dataclass
 class Sample:
     qid: int
-    uuid: int
+    uuid: str
     question: str
     answer: str
     context: str
     topic: str
-    label: str
-    source_page:
-    reference: list = field(default_factory=lambda: None) #
+    source_page: str
+    reference: dict = field(default_factory=lambda: None)  #
+
+    def to_dict(self):
+        # @NOTE :: make compatible with previously used fields
+        return {
+            "id": self.qid,
+            "uuid": self.uuid,
+            "question": self.question,
+            "answer": self.answer,
+            "passage": self.context,
+            "topic": self.topic,
+            "reference_text": self.source_page,
+            "meta": self.reference,
+        }
+
+
+@dataclass
+class Dataset2:
+
+    name: str = "oqa-curation"
+    save_dir: str = os.path.abspath("./save_data/")
+    export_dir: str = os.path.abspath("./exports/")
+    save_path: str = None
+    export_path: str = None
+
+    samples: list = field(default_factory=lambda: [])
+
+    def __len__(self):
+        return len(self.samples)
+
+    def __getitem__(self, key):
+        """returns a samples from location in list"""
+        return self.samples[key]
+
+    def __setitem__(self, key, value):
+        """modifies a sample at location in list"""
+        self.samples[key] = value
+
+    def __delitem__(self, key):
+        """deletes a sample at location in list"""
+        # @TODO :: send to a trash list to retrieve if needed...
+        self.samples[key] = value
+
+    def __sample_from_dict(self, sample_dict):
+
+        if "uuid" in sample_dict.keys():
+            return Sample(
+                qid=sample_dict["id"],
+                uuid=sample_dict["uuid"],
+                question=sample_dict["question"],
+                answer=sample_dict["answer"],
+                context=sample_dict["passage"],
+                topic=sample_dict["topic"],
+                source_page=sample_dict["reference_text"],
+                reference=sample_dict["meta"],
+            )
+        else:
+            return Sample(
+                qid=sample_dict["id"],
+                uuid=str(uuid.uuid4()),
+                question=sample_dict["question"],
+                answer=sample_dict["answer"],
+                context=sample_dict["passage"],
+                topic=sample_dict["topic"],
+                source_page=sample_dict["reference_text"],
+                reference=sample_dict["meta"],
+            )
+
+    def load_from_json(self, path):
+        """load json, create samples and append to sample_list"""
+        if self.samples == []:
+            with open(path, "rb") as f:
+                d = json.load(f)
+                for i in d:
+                    self.samples.append(self.__sample_from_dict(i))
+        else:
+            raise Exception(
+                "Samples already loaded, create an empty instance before loading from json."
+            )
+
+    def rename(self, newname):
+        self.name = newname
+
+    def add(self, loc):
+        """create a new sample with fields from current samples"""
+        self.samples.append(
+            Sample(
+                qid=self.samples[loc].qid
+                + 900000,  # keep the last 4 numbers of the initial id
+                uuid=str(uuid.uuid4()),
+                question="[NEW] :: " + self.samples[loc].question,
+                answer="[NEW] :: " + self.samples[loc].answer,
+                context="[NEW] :: " + self.samples[loc].context,
+                topic=self.samples[loc].topic,
+                source_page=self.samples[loc].source_page,
+                reference=self.samples[loc].reference,
+            )
+        )
+
+    def export(self, fpath=None):
+        """export the dataset to json"""
+        sample_list = []
+        for i in self.samples:
+            sample_list.append(i.to_dict())
+
+        if os.path.isdir(self.export_dir):
+            pass
+        else:
+            os.makedirs(self.export_dir)
+
+        if fpath is None:
+            t = datetime.today()
+            timestamp = "{}-{}-{}-{}h{}".format(
+                t.year, t.month, t.day, t.hour, t.minute
+            )
+            self.export_path = os.path.abspath(
+                os.path.join(self.export_dir, "{}_{}.json".format(self.name, timestamp))
+            )
+
+            with open(self.export_path, "w", encoding="utf-8") as f:
+                json.dump(sample_list, f, ensure_ascii=False, indent=2)
+        else:
+            with open(fpath, "w", encoding="utf-8") as f:
+                json.dump(sample_list, f, ensure_ascii=False, indent=2)
