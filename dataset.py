@@ -18,7 +18,7 @@ topic_list = [
     "materials",
     "growth",
     "clinical",
-    "tmj",
+    "other",
 ]
 
 
@@ -302,6 +302,7 @@ class Sample:
     answer: str
     context: str
     topic: str
+    subtopic: str
     source_page: str
     export: bool
     reference: dict = field(default_factory=lambda: None)  #
@@ -315,6 +316,7 @@ class Sample:
             "answer": self.answer,
             "passage": self.context,
             "topic": self.topic,
+            "subtopic": self.subtopic,
             "reference_text": self.source_page,
             "meta": self.reference,
         }
@@ -357,6 +359,7 @@ class Dataset2:
                 answer=sample_dict["answer"],
                 context=sample_dict["passage"],
                 topic=sample_dict["topic"],
+                subtopic=sample_dict["subtopic"],  # only after v0.3
                 source_page=sample_dict["reference_text"],
                 reference=sample_dict["meta"],
                 export=True,
@@ -399,8 +402,10 @@ class Dataset2:
                 answer="[NEW] :: " + self.samples[loc].answer,
                 context="[NEW] :: " + self.samples[loc].context,
                 topic=self.samples[loc].topic,
+                subtopic=self.samples[loc].subtopic,
                 source_page=self.samples[loc].source_page,
                 reference=self.samples[loc].reference,
+                export=True,
             )
         )
 

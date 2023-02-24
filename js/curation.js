@@ -48,6 +48,7 @@ function sendPost() {
     const answer = document.getElementById('answer').value;
     const context = document.getElementById('context').value;
     const topic = document.getElementById('topic').value;
+    const subtopic = document.getElementById('subtopic').value;
 
     var export_sample = document.getElementById("exportCheck").checked;
 
@@ -57,7 +58,9 @@ function sendPost() {
                              "answer": answer,
                              "context": context,
                              "export" : export_sample,
-                             "topic" : topic}));
+                             "topic" : topic,
+                             "subtopic": subtopic,
+                            }));
     // @TODO :: @BUG :: if there is an invalid field the post request fails to
     // save the changes, therefore we should wait to have a 200 response from
     // the post before moving on? xhr.status

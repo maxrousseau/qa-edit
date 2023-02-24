@@ -51,7 +51,7 @@ QA editor:
   - [X] *word count* (tokenize all on fly - JS)
   - [X] *Export checkbox* (n-export count - JS+HTML)
   - [ ] *subtopic input* (PY+JS+HTML)
-  - [ ] *change passage* (PY+JS+HTML)
+  - [ ] change passage (PY+JS+HTML)
   - [X] load and export function (JSON only)
   - [X] paper lookup https://meridian.allenpress.com/angle-orthodontist/search-results?page=1&q=***PAPERTITLEHERE***&SearchSourceType=1
   - [X] add question function

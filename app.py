@@ -75,6 +75,7 @@ class sampleForm2(BaseModel):
     answer: str
     context: str
     topic: str
+    subtopic: str
     export: bool
 
 
@@ -104,6 +105,7 @@ def update_curated_sample(sample: sampleForm2):
         answer=sample.answer,
         context=sample.context,
         topic=sample.topic,
+        subtopic=sample.subtopic,
         source_page=oqa[sample.loc].source_page,
         uuid=oqa[sample.loc].uuid,
         reference=oqa[sample.loc].reference,
@@ -125,6 +127,7 @@ def export_dataset(sample: sampleForm):
         c=sample.context,
         c_id=sample.context_id,
         t=sample.topic,
+        st=sample.subtopic,
         label=sample.label,
     )
     oqa.update_from_item(item)
@@ -247,6 +250,7 @@ async def read_item(request: Request, loc: int):
         "answer": oqa[loc].answer,
         "context": oqa[loc].context,
         "topic": oqa[loc].topic,
+        "subtopic": oqa[loc].subtopic,
         "source_page": oqa[loc].source_page,
         "reference": oqa[loc].reference,
         "export": oqa[loc].export,

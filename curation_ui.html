@@ -31,13 +31,10 @@ UUID: {{uuid}}
 </div>
 
 Export: <input type="checkbox" id="exportCheck"
-
         {% if export == True %}
                checked
         {% else %}
-        {% endif %}
-
-               >
+        {% endif %}>
 
 
 <div>
@@ -51,6 +48,7 @@ Export: <input type="checkbox" id="exportCheck"
         {% endif %}
     {% endfor %}
   </select>
+  Subtopic: <input type="text" id="subtopic", value="{{subtopic}}">
 </div>
 
 <textarea id="question" name="question" rows="2" cols="50"
@@ -72,8 +70,8 @@ Export: <input type="checkbox" id="exportCheck"
 -->
 <button type="submit" value="Submit", style="float:right", onclick="exportDataset()">Export</button>
 
-<button type="submit" value="Submit", onclick="prev()">Prev</button>
-<button type="submit" value="Submit", onclick="next()">Next</button>
+<button type="submit" value="Submit", onclick="prev()" accesskey="p">Prev</button>
+<button type="submit" value="Submit", onclick="next()" accesskey="n">Next</button>
 <button type="submit" value="Submit", id="goto", onclick="goto()">Goto</button>
 <input type="number", value="{{loc}}", id="qid_select", cols="10", style="width:6em">
 </div>
