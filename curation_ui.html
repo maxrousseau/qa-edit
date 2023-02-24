@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 
 <html>
-  <body>
+
+<script type="text/javascript" src="{{ url_for('js', path='curation.js') }}"></script>
+<link href="{{ url_for('static', path='sakura.css') }}" rel="stylesheet">
+
+  <body onload="wc()">
     <head>
   <title>QA-Edit</title>
   <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     </head>
 
-<script type="text/javascript" src="{{ url_for('js', path='curation.js') }}"></script>
-
-<link href="{{ url_for('static', path='sakura.css') }}" rel="stylesheet">
 
 <h1>QA-Edit: Curation</h1>
 <p>A simple question-answering dataset editor</p>
+
 
 <div name="dataset name">
 Dataset name : <a id="dataset-name">{{name}}</a> <button type="submit", value="Submit", onclick="rename()">Edit</button>
@@ -25,7 +27,18 @@ Dataset name : <a id="dataset-name">{{name}}</a> <button type="submit", value="S
 <div name="question id">
 Question: {{loc}}/{{n_samples}} <br>
 UUID: {{uuid}}
+<div id="sample-wc"></div>
 </div>
+
+Export: <input type="checkbox" id="exportCheck"
+
+        {% if export == True %}
+               checked
+        {% else %}
+        {% endif %}
+
+               >
+
 
 <div>
   Topic :
@@ -41,13 +54,13 @@ UUID: {{uuid}}
 </div>
 
 <textarea id="question" name="question" rows="2" cols="50"
-          style="resize:vertical">{{question}}</textarea>
+          style="resize:vertical" oninput="wc()">{{question}}</textarea>
 
 <textarea id="answer" name="answer" rows="2" cols="50"
-  style="resize:vertical">{{answer}}</textarea>
+  style="resize:vertical" oninput="wc()">{{answer}}</textarea>
 
 <textarea id="context" name="context" rows="23" cols="50"
-          style="resize:vertical">{{context}}</textarea>
+          style="resize:vertical" oninput="wc()">{{context}}</textarea>
 
 <div>
 <button type="submit" value="Submit", onclick="add()">Add new</button>

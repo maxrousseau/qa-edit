@@ -34,10 +34,11 @@ def init_dataset():
             print("error")
             return oqa
 
-    elif cfg.view_mode == "curation":
+    elif cfg.view_mode == "curate":
         if cfg.init_mode == "json":
             oqa = Dataset2()
             oqa.load_from_json(cfg.load_file)
+            print("dataset loadded")
 
         else:
             raise Exception("Specify json file for curation.")
@@ -74,11 +75,7 @@ class sampleForm2(BaseModel):
     answer: str
     context: str
     topic: str
-
-
-@app.get("/")
-def read_root():
-    return {"Hello": "Machine"}
+    export: bool
 
 
 @app.post("/posting/")
@@ -110,6 +107,7 @@ def update_curated_sample(sample: sampleForm2):
         source_page=oqa[sample.loc].source_page,
         uuid=oqa[sample.loc].uuid,
         reference=oqa[sample.loc].reference,
+        export=sample.export,
     )
     oqa[sample.loc] = s
 
@@ -251,6 +249,7 @@ async def read_item(request: Request, loc: int):
         "topic": oqa[loc].topic,
         "source_page": oqa[loc].source_page,
         "reference": oqa[loc].reference,
+        "export": oqa[loc].export,
         "topics": topic_list,
     }
 

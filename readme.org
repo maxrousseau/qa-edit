@@ -15,6 +15,7 @@ Automatically:
 
 ** UI elements
 
+
 Luckily for us html and the browser will implement many of features for us (i.e. text wrapping, text
 highlighting, etc.). Which should technically make all this work much easier.
 
@@ -30,7 +31,7 @@ highlighting, etc.). Which should technically make all this work much easier.
 ** Feature list
 
 QA editor:
-- [8/12] basic
+- [8/12] Filtering view
   - [X] context id, label, topic/subtopic input
   - [X] save question/update dataset
   - [X] next/previous question
@@ -46,12 +47,16 @@ QA editor:
   - [ ] passage reference from the counter with a link to the document browser
     page for that paper (and hyperlink to the search result by inputting name
     into angle website search bar)
-- [3/5] Curation view
-  - [ ] word count
+- [5/9] Curation view
+  - [X] *word count* (tokenize all on fly - JS)
+  - [X] *Export checkbox* (n-export count - JS+HTML)
+  - [ ] *subtopic input* (PY+JS+HTML)
+  - [ ] *change passage* (PY+JS+HTML)
   - [X] load and export function (JSON only)
   - [X] paper lookup https://meridian.allenpress.com/angle-orthodontist/search-results?page=1&q=***PAPERTITLEHERE***&SearchSourceType=1
-  - [ ] pdf lookup from local file with ocr (to be implemented later)
   - [X] add question function
+  - [ ] pdf lookup from local file with ocr (to be implemented later)
+  - [ ] drag n drop image to OCR (or a similarily fast way to re-do the OCR when needed NOT TESSERACT)
 - [0/4] extra
   - [ ] keybindings
   - [ ] implement advanced multiword fuzzy search/highlight with js
@@ -63,3 +68,9 @@ Paper search: (see above)
 
 Document browser:
 - TBD
+
+** TODO Future refactor plan
+
+Figure out a way to make the app more general purpose for the curation of QA datasets.
+
+@TODO :: Start page > choose mode > choose checkpoint file > dynamic view (JS fetch data?)...

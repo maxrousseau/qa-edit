@@ -17,6 +17,7 @@ flags.DEFINE_string(
     "export_path", "./exports/", "set the export directory for the current project"
 )
 flags.DEFINE_string("load_from", None, "select a dataset file to load")
+flags.DEFINE_string("mode", None, "select UI mode (curate, filter or browse)")
 
 
 def main(argv):
@@ -40,15 +41,17 @@ def main(argv):
                 export_path=FLAGS.export_path,
                 load_file=os.path.abspath(FLAGS.load_from),
                 init_mode="json",
+                view_mode=FLAGS.mode,
             )
 
-        elif FLAGS.load_from.endswith(".pkl"):
-            cfg = Config(
-                save_path=FLAGS.save_path,
-                export_path=FLAGS.export_path,
-                load_file=os.path.abspath(FLAGS.load_from),
-                init_mode="pickle",
-            )
+        # only load from JSON for now... maybe parquet at some point...
+        #         elif FLAGS.load_from.endswith(".pkl"):
+        #             cfg = Config(
+        #                 save_path=FLAGS.save_path,
+        #                 export_path=FLAGS.export_path,
+        #                 load_file=os.path.abspath(FLAGS.load_from),
+        #                 init_mode="pickle",
+        #             )
         else:
             print("error")
 

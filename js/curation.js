@@ -10,6 +10,25 @@
 
 // @NOTE :: this works! I could simply use this to perform any necessary updates of the data. Im
 // trying to understand if HTML forms would be preferable for this purpose or no...
+
+function wc() {
+    const question = document.getElementById('question').value;
+    const answer = document.getElementById('answer').value;
+    const context = document.getElementById('context').value;
+
+    const q_len = question.split(" ").length;
+    const a_len = answer.split(" ").length;
+    const c_len = context.split(" ").length;
+    const t_len = q_len + a_len + c_len;
+
+    //document.getElementById("wc-question").innerHTML = new_name;
+    //document.getElementById("wc-answer").innerHTML = new_name;
+
+    sample_wc = `Word count: question (${q_len}) answer (${a_len}) context (${c_len}) total (${t_len})`;
+    document.getElementById("sample-wc").innerHTML = sample_wc;
+
+}
+
 function sendPost() {
     var url = "http://127.0.0.1:8000/post-curate/";
     var xhr = new XMLHttpRequest();
@@ -30,12 +49,14 @@ function sendPost() {
     const context = document.getElementById('context').value;
     const topic = document.getElementById('topic').value;
 
+    var export_sample = document.getElementById("exportCheck").checked;
 
     xhr.send(JSON.stringify({"loc": loc,
                              "qid": qid,
                              "question": question,
                              "answer": answer,
                              "context": context,
+                             "export" : export_sample,
                              "topic" : topic}));
     // @TODO :: @BUG :: if there is an invalid field the post request fails to
     // save the changes, therefore we should wait to have a 200 response from

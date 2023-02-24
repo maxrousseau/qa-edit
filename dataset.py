@@ -303,6 +303,7 @@ class Sample:
     context: str
     topic: str
     source_page: str
+    export: bool
     reference: dict = field(default_factory=lambda: None)  #
 
     def to_dict(self):
@@ -322,7 +323,7 @@ class Sample:
 @dataclass
 class Dataset2:
 
-    name: str = "oqa-curation"
+    name: str = "oqa-v0.0"
     save_dir: str = os.path.abspath("./save_data/")
     export_dir: str = os.path.abspath("./exports/")
     save_path: str = None
@@ -358,6 +359,7 @@ class Dataset2:
                 topic=sample_dict["topic"],
                 source_page=sample_dict["reference_text"],
                 reference=sample_dict["meta"],
+                export=True,
             )
         else:
             return Sample(
@@ -406,7 +408,8 @@ class Dataset2:
         """export the dataset to json"""
         sample_list = []
         for i in self.samples:
-            sample_list.append(i.to_dict())
+            if i.export == True:
+                sample_list.append(i.to_dict())
 
         if os.path.isdir(self.export_dir):
             pass
