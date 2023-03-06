@@ -47,14 +47,14 @@ QA editor:
   - [ ] passage reference from the counter with a link to the document browser
     page for that paper (and hyperlink to the search result by inputting name
     into angle website search bar)
-- [5/9] Curation view
+- [6/9] Curation view
   - [X] *word count* (tokenize all on fly - JS)
   - [X] *Export checkbox* (n-export count - JS+HTML)
-  - [ ] *subtopic input* (PY+JS+HTML)
-  - [ ] change passage (PY+JS+HTML)
+  - [X] *subtopic input* (PY+JS+HTML)
   - [X] load and export function (JSON only)
   - [X] paper lookup https://meridian.allenpress.com/angle-orthodontist/search-results?page=1&q=***PAPERTITLEHERE***&SearchSourceType=1
   - [X] add question function
+  - [ ] change passage (PY+JS+HTML)
   - [ ] pdf lookup from local file with ocr (to be implemented later)
   - [ ] drag n drop image to OCR (or a similarily fast way to re-do the OCR when needed NOT TESSERACT)
 - [0/4] extra
